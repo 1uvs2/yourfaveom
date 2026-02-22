@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title> 최애 성현 고르기</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="game-body">
+
+    <div class="play-container">
+        
+        <img src="images/title_stage.png" class="game-title-img" alt="제목">
+
+        <div class="round-info" id="round-label">16강 (1 / 8)</div>
+
+        <div class="match-card">
+            <div class="match-title">0828 What You Want</div>
+            
+            <div class="media-box">
+                <iframe src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+            </div>
+
+            <button class="select-btn" onclick="selectWinner(1)">
+                <img src="images/btn_select.png" alt="선택하기">
+            </button>
+        </div>
+
+        <div class="match-card">
+            <div class="match-title">0823 Go!</div>
+            
+            <div class="media-box">
+                <iframe src="https://www.youtube.com/embed/VIDEO_ID_2" frameborder="0" allowfullscreen></iframe>
+            </div>
+
+            <button class="select-btn" onclick="selectWinner(2)">
+                <img src="images/btn_select.png" alt="선택하기">
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // 부문별로 이미지 자동 변경 (필요 없으면 무시해도 됨)
+        const urlParams = new URLSearchParams(window.location.search);
+        const type = urlParams.get('type');
+        const titleImg = document.querySelector('.game-title-img');
+
+        if (titleImg) {
+             if (type === 'stage') titleImg.src = 'images/title_stage.png';
+             else if (type === 'photo') titleImg.src = 'images/title_photo.png';
+             else if (type === 'past') titleImg.src = 'images/title_past.png';
+        }
+
+        function selectWinner(winnerIndex) {
+            alert(winnerIndex + "번 후보 선택 완료!");
+        }
+    </script>
+
+</body>
+</html>

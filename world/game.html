@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>진행중 | 성현 월드컵</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="game-body"> 
+    <main class="container">
+        <header class="game-header">
+            <img id="game-title-img" class="game-title-img" src="images/title_stage.png" alt="월드컵 제목">
+            
+            <h2 id="gameTitle" class="header-title" style="display:none;">LOADING...</h2>
+
+            <div class="progress-container">
+                <p id="roundInfo" class="round-text">강수 계산 중...</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="battle-area">
+            <article class="match-card top-card" id="card1">
+                <div class="video-frame">
+                    <iframe id="video1" src="" frameborder="0" allowfullscreen></iframe>
+                    <img id="img1" src="" alt="후보1 이미지">
+                    <video id="localVideo1" controls playsinline></video>
+                </div>
+                <button class="select-btn" onclick="selectWinner(0)">
+                    <img src="images/btn_select.png" alt="선택하기">
+                </button>
+                <p class="video-title" id="title1">후보 1</p>
+            </article>
+
+            
+
+            <article class="match-card bottom-card" id="card2">
+                 <div class="video-frame">
+                    <iframe id="video2" src="" frameborder="0" allowfullscreen></iframe>
+                    <img id="img2" src="" alt="후보2 이미지">
+                    <video id="localVideo2" controls playsinline></video>
+                </div>
+                <button class="select-btn" onclick="selectWinner(1)">
+                    <img src="images/btn_select.png" alt="선택하기">
+                </button>
+                <p class="video-title" id="title2">후보 2</p>
+            </article>
+        </div>
+    </main>
+
+    <script src="game.js"></script>
+    <script src="sparkle.js"></script>
+
+    <script>
+        // 제목 이미지 변경 로직
+        const urlParams = new URLSearchParams(window.location.search);
+        const type = urlParams.get('type'); 
+        const titleImg = document.getElementById('game-title-img');
+
+        // 이미지가 존재할 때만 소스 변경
+        if (titleImg) {
+            if (type === 'stage') {
+                titleImg.src = 'images/title_stage.png'; 
+            } else if (type === 'dance') {
+                titleImg.src = 'images/title_dance.png'; 
+            } else if (type === 'past') {
+                titleImg.src = 'images/title_past.png';
+            }
+            // type이 없어도 HTML에 적힌 기본값(title_stage.png)이 뜹니다.
+        }
+    </script>
+
+</body> 
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><style>
+        /* ... 기존 스타일 내용들 ... */
+
+        /* 👇 여기서부터 복사해서 붙여넣으세요 👇 */
+        
+        .img-btn {
+            display: inline-block;       /* 움직임이 먹히도록 설정 */
+            transition: transform 0.1s;  /* 0.1초 동안 부드럽게 */
+        }
+
+        /* 마우스 올렸을 때: 아무 변화 없음 (커짐 방지) */
+        .img-btn:hover {
+            transform: none; 
+        }
+
+        /* 클릭했을 때: 아래로 4px 내려감 (쫀득한 느낌) */
+        .img-btn:active {
+            transform: translateY(4px);
+        }
+        
+    </style>
+</head>
+    <style>
+        
+        @font-face {
+            font-family: 'MyGameFont';
+            /* 🚨 폰트 파일 이름을 'a'로 바꾸고 하세요! 이게 젤 속 편합니다 */
+            src: url('font.ttf') format('truetype');
+        }
+        * {
+            font-family: 'MyGameFont', sans-serif !important;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>yourfaveom</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 혹시 반짝이가 안 보일까봐 강제로 스타일 추가 */
+        .sparkle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 999999 !important; /* 무조건 제일 위에 */
+            border-radius: 50%;
+        }
+    </style>
+    <style>
+    /* 로고 애니메이션 강제 적용 */
+    .logo-area img, .main-logo {
+        animation: logo-bounce 1s infinite ease-in-out !important;
+        will-change: transform, filter;
+    }
+
+    /* 반짝거리고 커지는 움직임 정의 */
+    @keyframes logo-bounce {
+        0% {
+            transform: scale(1);
+            filter: brightness(100%);
+        }
+       50% {transform: scale(1.01);
+            filter: brightness(120%); /* 30% 더 밝아짐 */
+        }
+        100% {
+            transform: scale(1);
+            filter: brightness(100%);
+        }
+    }
+    /* index.html의 <style> 태그 맨 마지막에 추가하세요 */
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center !important; /* 무조건 수직 중앙 정렬 */
+    align-items: center;
+    min-height: 100vh;
+    
+    /* 👇 혹시 위로 올라가게 만드는 여백이 있다면 강제로 없앱니다 */
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+}
+</style>
+</head>
+<body class="main-body">
+
+    <audio id="mainBgm" loop>
+        <source src="bgm.mp3" type="audio/mp3">
+    </audio>
+    
+    <div id="musicBtn" class="music-controller" style="display:none;"> 🔊 ON </div>
+
+    <div class="container main-container">
+        <div class="logo-area">
+            <img src="./images/abc.png" alt="메인 로고" class="main-logo">
+        </div>
+        
+   <div class="button-area">
+    
+    <a href="intro.html?type=stage" class="img-btn">
+        <img src="images/btn_stage.png" alt="무대 부문">
+    </a>
+
+    <a href="intro.html?type=dance" class="img-btn">
+        <img src="images/btn_dance.png" alt="셀카 부문">
+    </a>
+
+    <a href="intro.html?type=past" class="img-btn">
+        <img src="images/btn_past.png" alt="과거 부문">
+    </a>
+
+</div>
+    </div>
+
+    <script>
+        /* -----------------------------------------
+           1. 배경음악 기능 (기존 코드 유지)
+        ----------------------------------------- */
+        const bgm = document.getElementById('mainBgm');
+        const musicBtn = document.getElementById('musicBtn');
+        let isPlaying = false;
+
+        window.addEventListener('load', function() {
+            musicBtn.style.display = 'block'; 
+            bgm.volume = 0.5; 
+
+            bgm.play().then(() => {
+                isPlaying = true;
+                musicBtn.innerText = "🔊 ON";
+            }).catch(error => {
+                isPlaying = false;
+                musicBtn.innerText = "🔇 OFF (터치)";
+                console.log("자동 재생 차단됨");
+            });
+        });
+
+        document.body.addEventListener('click', function() {
+            if (!isPlaying) {
+                bgm.play();
+                isPlaying = true;
+                musicBtn.innerText = "🔊 ON";
+            }
+        }, { once: true });
+
+        musicBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); 
+            if (isPlaying) {
+                bgm.pause();
+                musicBtn.innerText = "🔇 OFF";
+            } else {
+                bgm.play();
+                musicBtn.innerText = "🔊 ON";
+            }
+            isPlaying = !isPlaying;
+        });
+
+        /* -----------------------------------------
+           2. ✨ 반짝이 효과 (확실하게 수정됨)
+        ----------------------------------------- */
+        // 화면 아무 곳이나 클릭하면 실행
+        document.addEventListener('click', function(e) { 
+            createSparkles(e.clientX, e.clientY); 
+        });
+        
+        // 모바일 터치 대응
+        document.addEventListener('touchstart', function(e) { 
+            // 터치는 여러 개일 수 있어서 첫 번째 터치 좌표를 가져옴
+            if(e.touches.length > 0){
+                createSparkles(e.touches[0].clientX, e.touches[0].clientY); 
+            }
+        });
+
+        function createSparkles(x, y) {
+            const particleCount = 20; 
+            const colors = ['#FFFFFF']; // 색깔 더 추가
+         
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('sparkle'); // 위에서 만든 스타일 적용
+
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const size = Math.random() * 5 +3; 
+                
+                // 스타일 직접 주입
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.backgroundColor = color;
+                particle.style.boxShadow = `0 0 10px ${color}`;
+
+                // 랜덤 움직임 계산
+                const destX = (Math.random() - 0.5) * 200; 
+                const destY = (Math.random() - 0.5) * 200; 
+                const rotation = Math.random() * 520;
+
+                document.body.appendChild(particle);
+
+                // 애니메이션 실행
+                const animation = particle.animate([
+                    { transform: `translate(0, 0) scale(1)`, opacity: 1 },
+                    { transform: `translate(${destX}px, ${destY}px) rotate(${rotation}deg) scale(0)`, opacity: 0 }
+                ], {
+                    duration: 500 + Math.random() * 500, 
+                    easing: 'cubic-bezier(0, .9, .57, 1)'
+                });
+
+                // 애니메이션 끝나면 태그 삭제 (렉 방지)
+                animation.onfinish = () => particle.remove();
+            }
+        }
+    </script>
+
+</body>
+</html>
+

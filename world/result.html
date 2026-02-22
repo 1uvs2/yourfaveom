@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>월드컵 결과!</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            /* 'images/새로운배경.png' 부분을 실제 파일명으로 바꾸세요 */
+            background-image: url('images/bg_result.png') !important; 
+            
+            background-size: cover;      /* 화면 꽉 차게 */
+            background-position: center; /* 중앙 정렬 */
+            background-repeat: no-repeat; /* 반복 없음 */
+        }
+        /* 👇 결과 화면 전용 스타일 (기존 css 수정 없이 여기서 해결) */
+        body, html {
+            height: 100%;
+            overflow: hidden; /* 스크롤 방지 */
+            margin: 0;
+        }
+
+        /* 내용을 화면 정중앙에 배치 */
+    .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            
+            /* 👇 [핵심 변경] 중앙 정렬(center)을 지우고 위쪽 정렬(flex-start)로 변경 */
+            justify-content: flex-start; 
+            
+            /* 👇 [조절 가능] 위에서부터 얼마나 떨어트릴지 설정 */
+            padding-top: 1vh;  /* 화면 높이의 8%만큼 띄움 (숫자가 작을수록 더 위로 올라감) */
+            
+            align-items: center;     
+            padding-bottom: 20px;
+            box-sizing: border-box; /* 테두리 계산 오류 방지 (필수) */
+        }
+        /* 로고 크기 살짝 조절 */
+        .logo-area {
+            margin-bottom: 0px !important;
+            flex: 0 0 auto;
+        }
+        .result-logo {
+            max-width: 350px; /* 로고가 너무 커서 공간 차지하는 것 방지 */
+        }
+
+        /* 결과 카드 영역 */
+        .winner-card {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 영상/이미지 틀 크기 최적화 */
+     .video-frame {
+            width: 95% !important;   /* 가로 너비: 화면에 거의 꽉 차게 */
+            max-height: 55vh;        /* 세로 높이: 화면의 절반 이상 허용 */
+            aspect-ratio: 16 / 9;    /* 유튜브 비율 유지 */
+            margin: 20px auto 10px auto;
+        }
+
+        /* 준우승 멘트 간격 줄이기 */
+        .sub-text-area {
+            margin: 5px 0 15px 0 !important; /* 위아래 간격을 확 줄임 */
+            text-align: center;
+        }
+
+        /* 버튼 영역 */
+        .button-area {
+            margin-top: 0 !important;
+        }
+        
+        /* 버튼 크기 */
+        .img-btn {
+            width: 400px; /* 버튼 크기 적당히 고정 */
+        }
+    </style>
+</head>
+
+<body class="game-body">
+
+    <div class="container">
+        <div class="logo-area">
+            <img src="images/result_logo.png" alt="RESULT" class="result-logo">
+        </div>
+
+        <div class="winner-card">
+            <h2 class="header-title" id="winnerTitle" style="color:#fff; text-shadow:0 2px 4px rgba(0, 0, 0, 0.177);">결과 불러오는 중...</h2>
+            
+            <div class="video-frame">
+                <iframe id="winnerVideo" width="100%" height="100%" src="" frameborder="0" style="display:none;"></iframe>
+                <img id="winnerImg" src="" style="width: 100%; height: 100%; object-fit: contain; display:none;">
+                <video id="winnerLocalVideo" controls style="width: 100%; height: 100%; object-fit: contain; display:none;"></video>
+            </div>
+        </div>
+
+        <div class="sub-text-area">
+            <p id="rank2" style="color: rgba(255,255,255,0.9); font-weight:bold;"> </p>
+        </div>
+
+        <div class="button-area">
+            <a href="index.html" class="img-btn">
+                <img src="images/btn_restart.png" alt="다시하기">
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const winnerData = JSON.parse(localStorage.getItem('winner'));
+
+        if (winnerData) {
+            document.getElementById('winnerTitle').innerText = winnerData.title;
+            
+            const youtubeEl = document.getElementById('winnerVideo');
+            const imgEl = document.getElementById('winnerImg');
+            const localVideoEl = document.getElementById('winnerLocalVideo');
+
+            if (winnerData.youtubeId) {
+                // 유튜브
+                youtubeEl.style.display = "block";
+                youtubeEl.src = `https://www.youtube.com/embed/${winnerData.youtubeId}`;
+            } else if (winnerData.imgSrc) {
+                // 사진
+                imgEl.style.display = "block";
+                imgEl.src = winnerData.imgSrc;
+            } else if (winnerData.videoSrc) {
+                // 내 동영상 (자동재생)
+                localVideoEl.style.display = "block";
+                localVideoEl.src = winnerData.videoSrc;
+                localVideoEl.play(); 
+            }
+        } else {
+            document.getElementById('winnerTitle').innerText = "기록이 없습니다.";
+        }
+        
+        // 2위 텍스트 업데이트 (추후 기능 확장용)
+        document.getElementById('rank2').innerText = "";
+    </script>
+    <script src="sparkle.js"></script>
+
+</body> 
+</html>

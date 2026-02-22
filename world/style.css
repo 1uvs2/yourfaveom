@@ -1,0 +1,400 @@
+/* =========================================
+   1. 기본 초기화 및 폰트 설정
+   ========================================= */
+@font-face {
+    font-family: 'MyGameFont';
+    src: url('font.ttf') format('truetype'); /* 파일명 확인 필수 */
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    font-family: 'MyGameFont', sans-serif !important;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================
+   2. 공통 BODY 설정
+   ========================================= */
+body {
+    background-color: #f0f2f5;
+    color: #ffffff;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.044);
+    width: 100%;
+    margin: 0;
+}
+
+/* 컨테이너 공통 (최대 너비 제한) */
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* =========================================
+   3. 메인 화면 (index.html)
+   ========================================= */
+.main-body {
+    height: 100vh;
+    background-image: url('bg_main.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.main-container {
+    width: 90%;
+    max-width: 400px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 로고 스타일 */
+.logo-area {
+width: 100%;             /* 전체 너비 사용 */
+    display: flex;           /* 플렉스 박스 모드 */
+    justify-content: center; /* 가로(좌우) 가운데 정렬 */
+    align-items: center;     /* 세로 가운데 정렬 */
+    text-align: center;      /* 텍스트 모드일 때도 가운데 정렬 */
+    margin-bottom: 20px !important;
+}
+
+.main-logo {
+    width: 150%;
+    max-width: 450px; /*로고크기*/
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    animation: super-twinkle 2s infinite ease-in-out !important;
+}
+
+/* 버튼 영역 */
+.button-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center !important;
+    gap: 0px;
+}
+
+/* 이미지 버튼 (시작하기 등) */
+.img-btn {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.img-btn img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.1s;
+}
+
+.img-btn:active img {
+    transform: scale(0.96);
+}
+
+/* =========================================
+   4. 게임 화면 (play.html) - 스크롤 금지/반반 배치
+   ========================================= */
+body.game-body {
+    height: 100vh !important; /* 화면 높이 고정 */
+    overflow: hidden !important; /* 스크롤바 숨김 */
+    background-image: url('bg_main.png') !important;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+.game-body .container {
+    height: 100% !important;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+}
+
+/* 상단 헤더 (타이틀, 진행바) */
+.game-header {
+    flex: 0 0 auto; /* 크기 고정 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px !important;
+}
+
+.game-title-img {
+    width: 40% !important;
+    max-width: 300px;
+    height: auto;
+    margin-top: 20px !important;
+    margin-bottom: 5px !important;
+}
+
+.progress-container {
+    width: 40% !important;
+    margin-bottom: 5px !important;
+    text-align: center;
+}
+.progress-bar {
+    width: 100%; height: 8px; background-color: #ffffff;
+    border-radius: 4px; overflow: hidden;
+}
+.progress-fill {
+    height: 100%; background: #ff57e6; width: 0%; transition: width 0.3s;
+}
+.round-text { font-size: 0.8rem; margin-bottom: 2px; }
+
+/* 대결 영역 (카드 2개) */
+.battle-area {
+    flex: 1; /* 남은 공간 꽉 채움 */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    min-height: 0; /* 내부 요소가 커도 강제 압축 */
+    gap: 5px;
+}
+
+/* 개별 카드 */
+.match-card {
+    flex: 1; /* 화면 절반씩 차지 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 0;
+    position: relative;
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+/* 텍스트(이름) 위로 올리기 */
+.match-card > div:not(.video-frame):not(.select-btn),
+.match-card h3, .match-card p {
+    order: -1;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 5px;
+    z-index: 10;
+    color: #000000 !important; /* 배경이 밝을 경우 검은 글씨 */
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+    font-weight: bold;
+}
+
+/* 이미지 틀 (Play 화면용) */
+.game-body .video-frame {
+    flex: 1; /* 남은 공간 차지 */
+    width: 100% !important;
+    min-height: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent !important;
+    margin-bottom: 15px;
+}
+
+/* Play 화면 이미지/영상 설정 (화면 구겨 넣기) */
+.game-body .video-frame img,
+.game-body .video-frame video,
+.game-body .video-frame iframe {
+    position: relative !important;
+    width: 90% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    max-width: 100% !important;
+    object-fit: contain !important; /* 비율 유지하며 쏙 들어가기 */
+    background: transparent !important;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0);
+}
+
+/* 선택 버튼 */
+.select-btn {
+    flex: 0 0 auto;
+    width: 80% !important;
+    max-width: 400px;
+    height: 90px !important;
+    background: transparent !important;
+    border: none !important;
+    margin: 0 auto;
+    z-index: 100;
+}
+.select-btn img { width: 100%; height: 100%; object-fit: contain; }
+.select-btn:active { transform: scale(0.95); }
+
+/* =========================================
+   5. 결과 화면 (result.html) - 스크롤 허용
+   ========================================= */
+body.result-body {
+    height: 100vh; /* 기본 높이 */
+    overflow-y: auto !important; /* 세로 스크롤 허용 */
+    background-image: url('bg_main.png'); /* Play와 같은 배경 */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* 결과 화면 컨테이너 (위치 조절) */
+.result-body .container {
+    height: auto !important;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    
+    /* 👇 1. 'center'를 'flex-start'로 바꾸세요 (그래야 위쪽 여백이 먹힙니다) */
+    justify-content: flex-start !important; 
+
+    /* 👇 2. 이 숫자를 늘릴수록 더 아래로 내려갑니다 (예: 100px -> 150px) */
+    padding-top: 130px !important; 
+    
+    padding-bottom: 50px !important;
+}
+/* 결과 화면 이미지 틀 */
+.result-body .video-frame {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* 📸 결과: 사진 (크기 적절히 제한) */
+.result-body .video-frame img {
+    width: auto !important;
+    max-width: 85% !important;
+    /* 사진 크기 조절: 숫자를 키우면 사진이 커집니다 */
+    max-height: 45vh !important; 
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* 📹 결과: 영상 (유튜브 등) */
+.result-body .video-frame iframe,
+.result-body .video-frame video {
+    width: 95% !important;
+    aspect-ratio: 16 / 9 !important; /* 유튜브 비율 유지 */
+    height: auto !important;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* 결과 화면 버튼 영역 */
+.result-body .button-area {
+    margin-top: 20px;
+    padding-bottom: 40px;
+}
+
+/* =========================================
+   6. 기타 애니메이션 및 유틸리티
+   ========================================= */
+@keyframes super-twinkle {
+    0% { filter: brightness(100%); transform: scale(1); }
+    50% { filter: brightness(140%); transform: scale(1.03); }
+    100% { filter: brightness(100%); transform: scale(1); }
+}
+
+/* BGM 컨트롤러 */
+.music-controller {
+    position: absolute; top: 20px; right: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ff5ac8;
+    cursor: pointer;
+    z-index: 999;
+}
+/* =========================================================
+   ✨ 화면 전환 및 애니메이션 효과 (부드러운 연출)
+   ========================================================= */
+
+/* 1. 페이지 전체가 열릴 때 스르륵 나타나는 효과 (Fade In + 살짝 올라옴) */
+@keyframes fadeInSlide {
+    from { 
+        opacity: 0; 
+        transform: translateY(15px); /* 약간 아래에서 시작 */
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0);    /* 제자리로 */
+    }
+}
+
+body {
+    /* 페이지 새로고침/이동 시 부드럽게 등장 */
+    animation: fadeInSlide 0.8s ease-out;
+}
+
+/* 2. 게임 카드(선택지)가 나올 때 뿅! 하고 뜨는 효과 */
+@keyframes cardPop {
+    0% { 
+        opacity: 0; 
+        transform: scale(0.95) translateY(10px); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: scale(1) translateY(0); 
+    }
+}
+
+.match-card {
+    /* 카드가 새로 생길 때마다 애니메이션 실행 */
+    animation: cardPop 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    /* 카드가 2개니까, 오른쪽 카드는 0.1초 늦게 뜨게 해서 리듬감 주기 (선택사항) */
+}
+
+.match-card:nth-child(2) {
+    animation-delay: 0.1s; /* 두 번째 카드는 0.1초 뒤에 등장 */
+    animation-fill-mode: both; /* 대기 중일 때 안 보이게 유지 */
+}
+
+/* 3. 버튼 눌렀을 때 부드러운 반응 */
+.select-btn, .img-btn {
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+/* ================================
+   🎵 BGM ON/OFF 버튼 스타일
+   ================================ */
+.bgm-btn {
+    position: fixed; /* 화면에 고정 */
+    top: 15px;       /* 위에서 15px 떨어짐 */
+    right: 15px;     /* 오른쪽에서 15px 떨어짐 */
+    z-index: 1000;   /* 다른 요소들보다 위에 */
+    
+    background: rgba(255, 255, 255, 0.9); /* 반투명 흰색 배경 */
+    color: #ff5ac8;  /* 핑크색 글씨 */
+    border: 2px solid #ff5ac8; /* 핑크색 테두리 */
+    border-radius: 20px; /* 둥글게 */
+    padding: 5px 15px;   /* 안쪽 여백 */
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* 그림자 */
+    transition: all 0.2s;
+}
+
+/* 버튼 눌렀을 때 효과 */
+.bgm-btn:active {
+    transform: scale(0.95);
+    background: #ff5ac8;
+    color: #fff;
+}
+

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>아이돌 이상형 월드컵</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* 스크롤 방지 */
+            background-color: #000;
+        }
+
+        /* 사이트를 보여줄 액자 (아이프레임) */
+        #content-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none; /* 입장 전에는 숨김 */
+        }
+
+        /* 입장 버튼 화면 (음악 재생을 위해 필요) */
+        #enter-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('images/bg_main.png'); /* 배경 이미지 */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .enter-btn {
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            background: #5AAEFF;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            animation: float 2s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="main-bgm" loop>
+        <source src="videos/bgm.mp3" type="audio/mp3">
+    </audio>
+
+    <div id="enter-screen">
+        <img src="images/logo.png" style="width:50%; max-width:200px; margin-bottom:20px;">
+        
+        <button class="enter-btn" onclick="enterSite()">
+            🎵 터치해서 시작하기
+        </button>
+    </div>
+
+    <iframe id="content-frame" src="index.html"></iframe>
+
+    <script>
+        function enterSite() {
+            var audio = document.getElementById("main-bgm");
+            var frame = document.getElementById("content-frame");
+            var screen = document.getElementById("enter-screen");
+
+            // 1. 음악 재생
+            audio.play().then(() => {
+                // 2. 입장 화면 숨기고 사이트(액자) 보여주기
+                screen.style.opacity = '0';
+                setTimeout(() => {
+                    screen.style.display = 'none';
+                    frame.style.display = 'block';
+                }, 500); // 0.5초 뒤에 사라짐
+            }).catch(error => {
+                console.log("재생 실패:", error);
+                alert("화면을 다시 터치해주세요!");
+            });
+        }
+
+</body>
+</html>
